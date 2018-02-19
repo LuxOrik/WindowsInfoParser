@@ -19,6 +19,7 @@ namespace WindowsInfoParser
             Serializer.Converters.Add(new SimpleIpAddressConverter());
         }
 
+        public string DefinitionVersion { get; set; } = "1";
         public string Name { get; set; }
         public string Domain { get; set; }
         public string Manufacturer { get; set; }

@@ -13,12 +13,13 @@ namespace WindowsInfoParser
 {
     internal static class Program
     {
+        /*
+         * -CreateNewCall OR -AnswerCall
+         * [-SetWorkingDirectory]
+         */
         private static void Main(string[] args)
         {
-            var ordi = SimplePC.GetCurrentMachineDefinition();
-            const string path = "D:/test/declaration.json";
-            
-            ordi.WriteToFile(path);
+            CallAnswerer.AnswerCall();
         }
     }
 }

@@ -59,7 +59,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DefinitionCallHandler.cs" />
+    <Compile Include="CallAnswerer.cs" />
+    <Compile Include="DefinitionCallFolderManager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SimpleIPInterface.cs" />

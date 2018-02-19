@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace WindowsInfoParser
 {
-    internal static class DefinitionCallHandler
+    internal static class DefinitionCallFolderManager
     {
         public const string CallDirectoryName = "Calls";
         public static void CreateNewDefinitionCall(DateTime? date = null)
@@ -25,7 +25,7 @@ namespace WindowsInfoParser
             Directory.CreateDirectory(directoryFullPath);
         }
 
-        public static IEnumerable<(DirectoryInfo, DateTime)> GetAllDefinitionCalls()
+        public static IEnumerable<(DirectoryInfo Folder, DateTime Date)> GetAllDefinitionCalls()
         {
             var directoryPath = Path.Combine(Environment.CurrentDirectory, CallDirectoryName);
             if (!Directory.Exists(directoryPath))
@@ -44,6 +44,6 @@ namespace WindowsInfoParser
             }
         }
 
-        public static (DirectoryInfo, DateTime) GetLastDefinitionCall() => GetAllDefinitionCalls().Last();
+        public static (DirectoryInfo Folder, DateTime Date) GetLastDefinitionCall() => GetAllDefinitionCalls().Last();
     }
 }
