@@ -19,6 +19,7 @@ namespace WindowsInfoParser
          */
         private static void Main(string[] args)
         {
+            Environment.CurrentDirectory = Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]) ?? throw new InvalidOperationException();
             CallAnswerer.AnswerCall();
         }
     }
