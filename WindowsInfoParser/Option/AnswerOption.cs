@@ -4,16 +4,25 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CommandLine;
+using CommandLine.Text;
 
-namespace WindowsInfoParser
+namespace WindowsInfoParser.Option
 {
-    public static class CallAnswerer
+    [Verb("answer", HelpText = "Answer a call in the specified folder.")]
+    internal class AnswerOptions
     {
-        public static CallAnswer AnswerCall()
+        [Option('f', "folder", Required = true, HelpText = "Root folder of the calls")]
+        public string FolderPath { get; set; }
+
+        [Usage]
+        public static IEnumerable<Example> Examples => new[] {new Example("Check call to answer", new AnswerOptions {FolderPath = "D:\\test\\Calls\\"})};
+
+        public CallAnswer AnswerCall()
         {
             var today = DateTime.Today;
             var lowerLimit = today - TimeSpan.FromDays(365 * 2);
-            var (folder, date) = DefinitionCallFolderManager.GetAllDefinitionCalls().FirstOrDefault(call => call.Date <= today);
+            var (folder, date) = CallFolderManager.GetAllDefinitionCalls(FolderPath).FirstOrDefault(call => call.Date <= today);
             if (date < lowerLimit)
                 return CallAnswer.NoCallToAnswerFound;
 

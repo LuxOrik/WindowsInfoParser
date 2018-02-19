@@ -4,30 +4,32 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WindowsInfoParser.Option;
 
 namespace WindowsInfoParser
 {
-    internal static class DefinitionCallFolderManager
+    internal static class CallFolderManager
     {
-        public const string CallDirectoryName = "Calls";
-        public static void CreateNewDefinitionCall(DateTime? date = null)
+        internal const string Format = "yyyy-MM-dd";
+
+        public static CreateResult CreateNewDefinitionCall(string path, DateTime date)
         {
-            date = date ?? DateTime.Today;
-            var directoryName = date.Value.ToString("yyyy-MM-dd");
-            var directoryPath = Path.Combine(Environment.CurrentDirectory, CallDirectoryName);
-            var directoryFullPath = Path.Combine(directoryPath, directoryName);
-            if (!Directory.Exists(directoryPath))
-                Directory.CreateDirectory(directoryPath);
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+            
+            var directoryName = date.ToString(Format);
+            var directoryFullPath = Path.Combine(path, directoryName);
 
             if (Directory.Exists(directoryFullPath))
-                throw new IOException($"A directory for a call already exists for the specified day ({date}).");
+                return CreateResult.AlreadyExists;
 
             Directory.CreateDirectory(directoryFullPath);
+            return CreateResult.Ok;
         }
 
-        public static IEnumerable<(DirectoryInfo Folder, DateTime Date)> GetAllDefinitionCalls()
+        public static IEnumerable<(DirectoryInfo Folder, DateTime Date)> GetAllDefinitionCalls(string path)
         {
-            var directoryPath = Path.Combine(Environment.CurrentDirectory, CallDirectoryName);
+            var directoryPath = Path.Combine(Environment.CurrentDirectory, path);
             if (!Directory.Exists(directoryPath))
                 yield break;
             foreach (var tuple in Directory.EnumerateDirectories(directoryPath)
@@ -44,6 +46,6 @@ namespace WindowsInfoParser
             }
         }
 
-        public static (DirectoryInfo Folder, DateTime Date) GetLastDefinitionCall() => GetAllDefinitionCalls().Last();
+        public static (DirectoryInfo Folder, DateTime Date) GetLastDefinitionCall(string path) => GetAllDefinitionCalls(path).Last();
     }
 }
