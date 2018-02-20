@@ -12,11 +12,17 @@ namespace WindowsInfoParser
     {
         internal const string Format = "yyyy-MM-dd";
 
+        public static bool CheckPathAvailability(string path, TimeSpan timeout)
+        {
+            var t = Task.Run(() => Directory.Exists(path));
+            return t.Wait(timeout) && t.Result;
+        }
+
         public static CreateResult CreateNewDefinitionCall(string path, DateTime date)
         {
-            if (!Directory.Exists(path))
-                Directory.CreateDirectory(path);
-            
+            if (!CheckPathAvailability(path, TimeSpan.FromSeconds(1)))
+                throw new DirectoryNotFoundException("The directory doesn't seem to be available.");
+
             var directoryName = date.ToString(Format);
             var directoryFullPath = Path.Combine(path, directoryName);
 
@@ -29,10 +35,10 @@ namespace WindowsInfoParser
 
         public static IEnumerable<(DirectoryInfo Folder, DateTime Date)> GetAllDefinitionCalls(string path)
         {
-            var directoryPath = Path.Combine(Environment.CurrentDirectory, path);
-            if (!Directory.Exists(directoryPath))
-                yield break;
-            foreach (var tuple in Directory.EnumerateDirectories(directoryPath)
+            if (!CheckPathAvailability(path, TimeSpan.FromSeconds(1)))
+                throw new DirectoryNotFoundException("The directory doesn't seem to be available.");
+            
+            foreach (var tuple in Directory.EnumerateDirectories(path)
                                            .Select(dir => new DirectoryInfo(dir))
                                            .Select(
                                                dirInfo => (dirInfo,
