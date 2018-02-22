@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 
 namespace WindowsInfoGatherer
 {
-    internal sealed class SimpleIpInterface
+    public sealed class SimpleIpInterface
     {
         public string Name { get; set; }
         public string Description { get; set; }

@@ -16,6 +16,12 @@ namespace WindowsInfoGatherer
 {
     internal static class Program
     {
+#if DEBUG
+        public const bool Debug = true;
+#else
+        public const bool Debug = false;
+#endif
+
         /*
          * create /path/
          * answer /path/
@@ -24,10 +30,20 @@ namespace WindowsInfoGatherer
         {
             try
             {
-                return Parser.Default.ParseArguments<AnswerOptions, CreateOptions>(args)
-                                 .MapResult<AnswerOptions, CreateOptions, int>(DoAnswer,
-                                     DoCreate,
-                                     error => 1);
+                var retCode = Parser.Default.ParseArguments<AnswerOptions, CreateOptions, ExportOptions>(args)
+                                    .MapResult<AnswerOptions, CreateOptions, ExportOptions, int>(
+                                        DoAnswer,
+                                        DoCreate,
+                                        DoExport,
+                                        error => 1);
+
+                // ReSharper disable once ConditionIsAlwaysTrueOrFalse
+                if (Debugger.IsAttached && Debug)
+                {
+                    Console.WriteLine("Press any key...");
+                    Console.ReadKey();
+                }
+                return retCode;
             }
             catch (DirectoryNotFoundException e)
             {
@@ -75,6 +91,13 @@ namespace WindowsInfoGatherer
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+        }
+
+        private static int DoExport(ExportOptions export)
+        {
+            export.Execute();
+            Console.WriteLine("Done."); //Do not write to eventlog
+            return 0;
         }
     }
 }

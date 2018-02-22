@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Management;
+using System.Net;
 using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,7 +11,7 @@ using Newtonsoft.Json;
 
 namespace WindowsInfoGatherer
 {
-    internal sealed class SimplePC
+    public sealed class SimplePC
     {
         public static readonly JsonSerializer Serializer = new JsonSerializer {Formatting = Formatting.Indented};
 
@@ -19,7 +20,7 @@ namespace WindowsInfoGatherer
             Serializer.Converters.Add(new SimpleIpAddressConverter());
         }
 
-        public string DefinitionVersion { get; set; } = "1";
+        public int DefinitionVersion { get; set; } = 2;
         public string Name { get; set; }
         public string Domain { get; set; }
         public string Manufacturer { get; set; }
@@ -29,6 +30,18 @@ namespace WindowsInfoGatherer
         public string OSVersion { get; set; }
         public DateTime OSInstallDate { get; set; }
         public List<SimpleIpInterface> Interfaces { get; set; } = new List<SimpleIpInterface>(1);
+
+        internal string AccessMacAddress
+        {
+            get => Interfaces.FirstOrDefault()?.MacAddress;
+            set { }
+        }
+
+        internal string AccessIpAddresses
+        {
+            get => string.Join(", ", Interfaces.FirstOrDefault()?.IpAddresses ?? new List<IPAddress>(0));
+            set { }
+        }
 
         public void WriteToFile(string path)
         {
