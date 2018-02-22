@@ -12,7 +12,7 @@ namespace WindowsInfoGatherer
     {
         private const string CategoryLog = "Application";
         private const string SourceLog = nameof(WindowsInfoGatherer);
-        private static bool EventLogReachable = true;
+        private static readonly bool EventLogReachable = true;
 
         static LoggingUtil()
         {
@@ -29,7 +29,8 @@ namespace WindowsInfoGatherer
 
         public static void Log(EventLogEntryType type, int eventId, string message)
         {
-            EventLog.WriteEntry(SourceLog, message, type, eventId);
+            if (EventLogReachable)
+                EventLog.WriteEntry(SourceLog, message, type, eventId);
 
             (type == EventLogEntryType.Error ? Console.Error : Console.Out).WriteLine($"{eventId:D4}: {message}");
         }
