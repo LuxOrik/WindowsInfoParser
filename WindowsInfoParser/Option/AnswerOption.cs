@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using CommandLine;
 using CommandLine.Text;
 
-namespace WindowsInfoParser.Option
+namespace WindowsInfoGatherer.Option
 {
     [Verb("answer", HelpText = "Answer a call in the specified folder.")]
     internal class AnswerOptions

@@ -4,9 +4,9 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WindowsInfoParser.Option;
+using WindowsInfoGatherer.Option;
 
-namespace WindowsInfoParser
+namespace WindowsInfoGatherer
 {
     internal static class CallFolderManager
     {
@@ -14,14 +14,14 @@ namespace WindowsInfoParser
 
         public static bool CheckPathAvailability(string path, TimeSpan timeout)
         {
-            var t = Task.Run(() => Directory.Exists(path));
+            Task<bool> t = Task.Run(() => Directory.Exists(path));
             return t.Wait(timeout) && t.Result;
         }
 
         public static CreateResult CreateNewDefinitionCall(string path, DateTime date)
         {
             if (!CheckPathAvailability(path, TimeSpan.FromSeconds(1)))
-                throw new DirectoryNotFoundException("The directory doesn't seem to be available.");
+                throw new DirectoryNotFoundException($"The directory doesn't seem to be available or doesn't exist. '{path}'");
 
             var directoryName = date.ToString(Format);
             var directoryFullPath = Path.Combine(path, directoryName);
@@ -36,7 +36,7 @@ namespace WindowsInfoParser
         public static IEnumerable<(DirectoryInfo Folder, DateTime Date)> GetAllDefinitionCalls(string path)
         {
             if (!CheckPathAvailability(path, TimeSpan.FromSeconds(1)))
-                throw new DirectoryNotFoundException("The directory doesn't seem to be available.");
+                throw new DirectoryNotFoundException($"The directory doesn't seem to be available or doesn't exist. '{path}'");
             
             foreach (var tuple in Directory.EnumerateDirectories(path)
                                            .Select(dir => new DirectoryInfo(dir))

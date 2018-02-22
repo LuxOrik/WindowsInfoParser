@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using CommandLine;
 using CommandLine.Text;
 
-namespace WindowsInfoParser.Option
+namespace WindowsInfoGatherer.Option
 {
     [Verb("create", HelpText = "Create a new call.")]
     internal class CreateOptions

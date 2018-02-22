@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
-namespace WindowsInfoParser
+namespace WindowsInfoGatherer
 {
     internal sealed class SimplePC
     {

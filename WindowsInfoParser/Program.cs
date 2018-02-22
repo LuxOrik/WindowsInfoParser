@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -7,11 +8,11 @@ using System.Management;
 using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading.Tasks;
-using WindowsInfoParser.Option;
+using WindowsInfoGatherer.Option;
 using CommandLine;
 using Newtonsoft.Json;
 
-namespace WindowsInfoParser
+namespace WindowsInfoGatherer
 {
     internal static class Program
     {
@@ -21,10 +22,18 @@ namespace WindowsInfoParser
          */
         private static int Main(string[] args)
         {
-            return Parser.Default.ParseArguments<AnswerOptions, CreateOptions>(args)
-                         .MapResult<AnswerOptions, CreateOptions, int>(DoAnswer,
-                             DoCreate,
-                             error => 1);
+            try
+            {
+                return Parser.Default.ParseArguments<AnswerOptions, CreateOptions>(args)
+                                 .MapResult<AnswerOptions, CreateOptions, int>(DoAnswer,
+                                     DoCreate,
+                                     error => 1);
+            }
+            catch (DirectoryNotFoundException e)
+            {
+                LoggingUtil.Log(EventLogEntryType.Error, 1500, e.Message);
+                return 2;
+            }
         }
 
         private static int DoCreate(CreateOptions create)
@@ -36,12 +45,14 @@ namespace WindowsInfoParser
             switch (CallFolderManager.CreateNewDefinitionCall(create.FolderPath, date))
             {
                 case CreateResult.AlreadyExists:
-                    Console.Error.WriteLine(create.ScheduledDate == null
-                        ? "A call already exists for today"
-                        : $"A call already exists for that date ({date.ToString(CallFolderManager.Format)})");
-                    return 2;
+                    LoggingUtil.Log(EventLogEntryType.Error,
+                        1510,
+                        create.ScheduledDate == null
+                            ? "A call already exists for today."
+                            : $"A call already exists for that date ({date.ToString(CallFolderManager.Format)}).");
+                    return 3;
                 case CreateResult.Ok:
-                    Console.WriteLine("Call created");
+                    LoggingUtil.Log(EventLogEntryType.Information, 1511, "Call created.");
                     return 0;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -53,13 +64,13 @@ namespace WindowsInfoParser
             switch (answer.AnswerCall())
             {
                 case AnswerOptions.CallAnswer.NoCallToAnswerFound:
-                    Console.WriteLine("No call to answer");
+                    LoggingUtil.Log(EventLogEntryType.Warning, 1520, "No call found.");
                     return 0;
                 case AnswerOptions.CallAnswer.LastCallAlreadyAnswered:
-                    Console.WriteLine("Last call was already answered");
+                    LoggingUtil.Log(EventLogEntryType.Information, 1521, "No new call to answer.");
                     return 0;
                 case AnswerOptions.CallAnswer.CallAnswered:
-                    Console.WriteLine("New call answered");
+                    LoggingUtil.Log(EventLogEntryType.Information, 1522, "New call answered.");
                     return 0;
                 default:
                     throw new ArgumentOutOfRangeException();

@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2027
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsInfoParser", "WindowsInfoParser\WindowsInfoParser.csproj", "{B1364950-22DB-46CF-AF48-6E2F31E41BB0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsInfoGatherer", "WindowsInfoParser\WindowsInfoGatherer.csproj", "{B1364950-22DB-46CF-AF48-6E2F31E41BB0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
