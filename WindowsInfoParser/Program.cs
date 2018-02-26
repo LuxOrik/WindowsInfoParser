@@ -15,8 +15,9 @@ namespace WindowsInfoGatherer
 #endif
 
         /*
-         * create /path/
+         * create /path/ [/date/]
          * answer /path/
+         * export /path/ /fileout/ /format/
          */
         private static int Main(string[] args)
         {
@@ -85,7 +86,7 @@ namespace WindowsInfoGatherer
         private static int DoExport(ExportOptions export)
         {
             export.Execute();
-            Console.WriteLine("Done."); //Do not write to eventlog
+            LoggingUtil.Log(EventLogEntryType.Information, EventLogIds.DoNotEventLog.Id(), "Done.");
             return 0;
         }
 
@@ -93,7 +94,7 @@ namespace WindowsInfoGatherer
 
         internal enum EventLogIds
         {
-            NoLog = -1,
+            DoNotEventLog = -1,
             DirectoryNotFound = 1500,
             CallAlreadyExists = 1510,
             CallCreated = 1511,
