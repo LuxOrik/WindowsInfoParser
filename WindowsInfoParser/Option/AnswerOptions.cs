@@ -25,7 +25,7 @@ namespace WindowsInfoGatherer.Option
                 return CallAnswer.NoCallToAnswerFound;
 
             var definition = SimplePC.GetCurrentMachineDefinition();
-            var fileName = $"{definition.Name}.json";
+            var fileName = $"{definition.Name}.{definition.Domain}.json";
             var fileFullPath = Path.Combine(folder.FullName, fileName);
             if (File.Exists(fileFullPath))
                 return CallAnswer.LastCallAlreadyAnswered;
