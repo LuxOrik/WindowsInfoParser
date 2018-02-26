@@ -10,10 +10,10 @@ namespace WindowsInfoGatherer.Collectors
 {
     public static class CollectorHelpers
     {
-        public static IEnumerable<SimplePC> CollectCallToCsv(DirectoryInfo directory)
-            => CollectCallToCsv(directory.FullName);
+        public static IEnumerable<SimplePC> CollectCalls(DirectoryInfo directory)
+            => CollectCalls(directory.FullName);
 
-        public static IEnumerable<SimplePC> CollectCallToCsv(string path)
+        public static IEnumerable<SimplePC> CollectCalls(string path)
             => Directory.EnumerateFiles(path, "*.json").Select(ReadFile).OrderBy(pc => pc.Name);
         
         private static SimplePC ReadFile(string filePath)

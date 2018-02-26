@@ -12,7 +12,7 @@ namespace WindowsInfoGatherer.Collectors
     {
         public static void Collect(DirectoryInfo callDirectory, string outPath, int? minVersion = null)
         {
-            var allAnswersQuery = CollectorHelpers.CollectCallToCsv(callDirectory);
+            var allAnswersQuery = CollectorHelpers.CollectCalls(callDirectory);
             if (minVersion.HasValue)
                 allAnswersQuery = allAnswersQuery.Where(pc => pc.DefinitionVersion >= minVersion.Value);
 
