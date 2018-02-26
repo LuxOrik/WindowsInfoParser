@@ -2,7 +2,6 @@
 using System.Linq;
 using CsvHelper;
 using CsvHelper.Configuration;
-using Newtonsoft.Json;
 
 namespace WindowsInfoGatherer.Collectors
 {
