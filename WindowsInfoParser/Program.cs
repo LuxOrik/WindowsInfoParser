@@ -46,18 +46,14 @@ namespace WindowsInfoGatherer
 
         private static int DoCreate(CreateOptions create)
         {
-            if (create.ScheduledDate == null
-                || !DateTime.TryParse(create.ScheduledDate, out var date))
-                date = DateTime.Today;
-            
-            switch (CallFolderManager.CreateNewDefinitionCall(create.FolderPath, date))
+            switch (create.Execute())
             {
                 case CreateResult.AlreadyExists:
                     LoggingUtil.Log(EventLogEntryType.Error,
                         1510,
                         create.ScheduledDate == null
                             ? "A call already exists for today."
-                            : $"A call already exists for that date ({date.ToString(CallFolderManager.Format)}).");
+                            : $"A call already exists for that date ({create.UsedDate?.ToString(CallFolderManager.Format) ?? "Undefined date"}).");
                     return 3;
                 case CreateResult.Ok:
                     LoggingUtil.Log(EventLogEntryType.Information, 1511, "Call created.");
@@ -69,7 +65,7 @@ namespace WindowsInfoGatherer
 
         private static int DoAnswer(AnswerOptions answer)
         {
-            switch (answer.AnswerCall())
+            switch (answer.Execute())
             {
                 case AnswerOptions.CallAnswer.NoCallToAnswerFound:
                     LoggingUtil.Log(EventLogEntryType.Warning, 1520, "No call found.");

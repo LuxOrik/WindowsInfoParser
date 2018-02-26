@@ -16,7 +16,7 @@ namespace WindowsInfoGatherer.Option
         [Usage]
         public static IEnumerable<Example> Examples => new[] {new Example("Check call to answer", new AnswerOptions {FolderPath = "D:\\test\\Calls\\"})};
 
-        public CallAnswer AnswerCall()
+        public CallAnswer Execute()
         {
             var today = DateTime.Today;
             var lowerLimit = today - TimeSpan.FromDays(365 * 2);
