@@ -25,7 +25,7 @@ namespace WindowsInfoGatherer
 
         public static void Log(EventLogEntryType type, int eventId, string message)
         {
-            if (EventLogReachable)
+            if (EventLogReachable && eventId > 0)
                 EventLog.WriteEntry(SourceLog, message, type, eventId);
 
             (type == EventLogEntryType.Error ? Console.Error : Console.Out).WriteLine($"{eventId:D4}: {message}");

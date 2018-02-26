@@ -39,7 +39,7 @@ namespace WindowsInfoGatherer
             }
             catch (DirectoryNotFoundException e)
             {
-                LoggingUtil.Log(EventLogEntryType.Error, 1500, e.Message);
+                LoggingUtil.Log(EventLogEntryType.Error, EventLogIds.DirectoryNotFound.Id(), e.Message);
                 return 2;
             }
         }
@@ -49,14 +49,15 @@ namespace WindowsInfoGatherer
             switch (create.Execute())
             {
                 case CreateResult.AlreadyExists:
-                    LoggingUtil.Log(EventLogEntryType.Error,
-                        1510,
+                    LoggingUtil.Log(
+                        EventLogEntryType.Error,
+                        EventLogIds.CallAlreadyExists.Id(),
                         create.ScheduledDate == null
                             ? "A call already exists for today."
                             : $"A call already exists for that date ({create.UsedDate?.ToString(CallFolderManager.Format) ?? "Undefined date"}).");
                     return 3;
                 case CreateResult.Ok:
-                    LoggingUtil.Log(EventLogEntryType.Information, 1511, "Call created.");
+                    LoggingUtil.Log(EventLogEntryType.Information, EventLogIds.CallCreated.Id(), "Call created.");
                     return 0;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -68,13 +69,13 @@ namespace WindowsInfoGatherer
             switch (answer.Execute())
             {
                 case AnswerOptions.CallAnswer.NoCallToAnswerFound:
-                    LoggingUtil.Log(EventLogEntryType.Warning, 1520, "No call found.");
+                    LoggingUtil.Log(EventLogEntryType.Warning, EventLogIds.NoCallAtAll.Id(), "No call found.");
                     return 0;
                 case AnswerOptions.CallAnswer.LastCallAlreadyAnswered:
-                    LoggingUtil.Log(EventLogEntryType.Information, 1521, "No new call to answer.");
+                    LoggingUtil.Log(EventLogEntryType.Information, EventLogIds.CallAlreadyAnswered.Id(), "No new call to answer.");
                     return 0;
                 case AnswerOptions.CallAnswer.CallAnswered:
-                    LoggingUtil.Log(EventLogEntryType.Information, 1522, "New call answered.");
+                    LoggingUtil.Log(EventLogEntryType.Information, EventLogIds.CallAnswered.Id(), "New call answered.");
                     return 0;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -86,6 +87,20 @@ namespace WindowsInfoGatherer
             export.Execute();
             Console.WriteLine("Done."); //Do not write to eventlog
             return 0;
+        }
+
+        private static int Id(this EventLogIds id) => (int) id;
+
+        internal enum EventLogIds
+        {
+            NoLog = -1,
+            DirectoryNotFound = 1500,
+            CallAlreadyExists = 1510,
+            CallCreated = 1511,
+            NoCallAtAll = 1520,
+            CallAlreadyAnswered = 1521,
+            CallAnswered = 1522
+
         }
     }
 }
