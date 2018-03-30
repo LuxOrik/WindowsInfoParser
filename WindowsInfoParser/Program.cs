@@ -23,7 +23,8 @@ namespace WindowsInfoGatherer
         {
             try
             {
-                var retCode = Parser.Default.ParseArguments<AnswerOptions, CreateOptions, ExportOptions>(args)
+                var parser = new Parser(settings => settings.CaseInsensitiveEnumValues = true);
+                var retCode = parser.ParseArguments<AnswerOptions, CreateOptions, ExportOptions>(args)
                                     .MapResult<AnswerOptions, CreateOptions, ExportOptions, int>(
                                         DoAnswer,
                                         DoCreate,
