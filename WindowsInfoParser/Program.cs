@@ -23,7 +23,13 @@ namespace WindowsInfoGatherer
         {
             try
             {
-                var parser = new Parser(settings => settings.CaseInsensitiveEnumValues = true);
+                var parser = new Parser(settings =>
+                {
+                    settings.CaseInsensitiveEnumValues = true;
+                    settings.CaseSensitive = false;
+                    settings.HelpWriter = Console.Out;
+                    settings.MaximumDisplayWidth = Console.BufferWidth;
+                });
                 var retCode = parser.ParseArguments<AnswerOptions, CreateOptions, ExportOptions>(args)
                                     .MapResult<AnswerOptions, CreateOptions, ExportOptions, int>(
                                         DoAnswer,
