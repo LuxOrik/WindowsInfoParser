@@ -14,7 +14,7 @@ namespace WindowsInfoGatherer.Option
         public string FolderPath { get; set; }
         [Option('o', "out", Required = true, HelpText = "File to export to.")]
         public string OutPath { get; set; }
-        [Option('t', "type", Required = true, HelpText = "Type to export to. CSV JSON")]
+        [Option('t', "type", Required = true, HelpText = "Type to export to. " + nameof(ExportType.Csv) + " or " + nameof(ExportType.Json))]
         public ExportType ExportType { get; set; }
 
         [Usage]
