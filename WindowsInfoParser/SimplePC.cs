@@ -16,6 +16,7 @@ namespace WindowsInfoGatherer
         static SimplePC()
         {
             Serializer.Converters.Add(new SimpleIpAddressConverter());
+            Serializer.Converters.Add(new SimpleMacAddressConverter());
         }
 
         public int DefinitionVersion { get; set; } = 2;
@@ -31,7 +32,7 @@ namespace WindowsInfoGatherer
 
         internal string AccessMacAddress
         {
-            get => Interfaces.FirstOrDefault()?.MacAddress;
+            get => Interfaces.FirstOrDefault()?.MacAddress.ToString();
             set { }
         }
 
@@ -77,7 +78,7 @@ namespace WindowsInfoGatherer
                 {
                     Name = netInterface.Name,
                     Description = netInterface.Description,
-                    MacAddress = netInterface.GetPhysicalAddress().ToString()
+                    MacAddress = netInterface.GetPhysicalAddress()
                 };
 
                 foreach (var addr in netInterface.GetIPProperties().UnicastAddresses)
