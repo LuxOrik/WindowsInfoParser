@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 using CsvHelper;
 using CsvHelper.Configuration;
@@ -14,12 +16,11 @@ namespace WindowsInfoGatherer.Collectors
                 allAnswersQuery = allAnswersQuery.Where(pc => pc.DefinitionVersion >= minVersion.Value);
 
             var allAnswers = allAnswersQuery.ToList();
-            using (var cW = new CsvWriter(new StreamWriter(outPath), false))
+            using (var cW = new CsvWriter(new StreamWriter(outPath), CultureInfo.CurrentCulture, false))
             {
-                cW.Configuration.RegisterClassMap<SimplePcCsvMap>();
+                cW.Context.RegisterClassMap<SimplePcCsvMap>();
                 cW.WriteRecords(allAnswers);
             }
-            
         }
     }
 
